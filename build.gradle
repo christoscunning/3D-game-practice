@@ -5,24 +5,119 @@
  * For more details take a look at the Java Quickstart chapter in the Gradle
  * user guide available at https://docs.gradle.org/3.5/userguide/tutorial_java_projects.html
  */
+ 
+ //lwjgl stuff
+import org.gradle.internal.os.OperatingSystem
+switch ( OperatingSystem.current() ) {
+	case OperatingSystem.WINDOWS:
+		project.ext.lwjglNatives = "natives-windows"
+		break
+	case OperatingSystem.LINUX:
+		project.ext.lwjglNatives = "natives-linux"
+	break
+	case OperatingSystem.MAC_OS:
+		project.ext.lwjglNatives = "natives-macos"
+		break
+}
+project.ext.lwjglVersion = "3.1.6"
 
-/*
 // Apply the java plugin to add support for Java
 apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'application'
+sourceSets.main.java.srcDirs = ['src']
+
+mainClassName = 'main.HelloWorld'
 
 // In this section you declare where to find the dependencies of your project
+// tag::repositories[]
 repositories {
     // Use 'jcenter' for resolving your dependencies.
     // You can declare any Maven/Ivy/file repository here.
-    mavenCenter()
-    jcenter()
+    mavenCentral()
 }
+// end::repositories[]
+
+// tag::jar[]
+jar {
+	/*
+	manifest {
+        attributes 'Main-Class': 'main.HelloWorld'
+    }
+    */
+    baseName = 'gs-gradle'
+    version =  '0.1.0'
+}
+// end::jar[]
 
 // In this section you declare the dependencies for your production and test code
+// tag::dependencies[]
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
 dependencies {
     // The production code uses the SLF4J logging API at compile time
     compile 'org.slf4j:slf4j-api:1.7.22'
     compile "joda-time:joda-time:2.2"
+    
+    // lwjgl dependencies
+    compile "org.lwjgl:lwjgl:$lwjglVersion"
+	compile "org.lwjgl:lwjgl-assimp:$lwjglVersion"
+	compile "org.lwjgl:lwjgl-bgfx:$lwjglVersion"
+	compile "org.lwjgl:lwjgl-egl:$lwjglVersion"
+	compile "org.lwjgl:lwjgl-glfw:$lwjglVersion"
+	compile "org.lwjgl:lwjgl-jawt:$lwjglVersion"
+	compile "org.lwjgl:lwjgl-jemalloc:$lwjglVersion"
+	compile "org.lwjgl:lwjgl-lmdb:$lwjglVersion"
+	compile "org.lwjgl:lwjgl-lz4:$lwjglVersion"
+	compile "org.lwjgl:lwjgl-nanovg:$lwjglVersion"
+	compile "org.lwjgl:lwjgl-nfd:$lwjglVersion"
+	compile "org.lwjgl:lwjgl-nuklear:$lwjglVersion"
+	compile "org.lwjgl:lwjgl-odbc:$lwjglVersion"
+	compile "org.lwjgl:lwjgl-openal:$lwjglVersion"
+	compile "org.lwjgl:lwjgl-opencl:$lwjglVersion"
+	compile "org.lwjgl:lwjgl-opengl:$lwjglVersion"
+	compile "org.lwjgl:lwjgl-opengles:$lwjglVersion"
+	compile "org.lwjgl:lwjgl-openvr:$lwjglVersion"
+	compile "org.lwjgl:lwjgl-ovr:$lwjglVersion"
+	compile "org.lwjgl:lwjgl-par:$lwjglVersion"
+	compile "org.lwjgl:lwjgl-remotery:$lwjglVersion"
+	compile "org.lwjgl:lwjgl-rpmalloc:$lwjglVersion"
+	compile "org.lwjgl:lwjgl-sse:$lwjglVersion"
+	compile "org.lwjgl:lwjgl-stb:$lwjglVersion"
+	compile "org.lwjgl:lwjgl-tinyexr:$lwjglVersion"
+	compile "org.lwjgl:lwjgl-tinyfd:$lwjglVersion"
+	compile "org.lwjgl:lwjgl-tootle:$lwjglVersion"
+	compile "org.lwjgl:lwjgl-vulkan:$lwjglVersion"
+	compile "org.lwjgl:lwjgl-xxhash:$lwjglVersion"
+	compile "org.lwjgl:lwjgl-yoga:$lwjglVersion"
+	compile "org.lwjgl:lwjgl-zstd:$lwjglVersion"
+	compile "org.lwjgl:lwjgl:$lwjglVersion:$lwjglNatives"
+	compile "org.lwjgl:lwjgl-assimp:$lwjglVersion:$lwjglNatives"
+	compile "org.lwjgl:lwjgl-bgfx:$lwjglVersion:$lwjglNatives"
+	compile "org.lwjgl:lwjgl-glfw:$lwjglVersion:$lwjglNatives"
+	compile "org.lwjgl:lwjgl-jemalloc:$lwjglVersion:$lwjglNatives"
+	compile "org.lwjgl:lwjgl-lmdb:$lwjglVersion:$lwjglNatives"
+	compile "org.lwjgl:lwjgl-lz4:$lwjglVersion:$lwjglNatives"
+	compile "org.lwjgl:lwjgl-nanovg:$lwjglVersion:$lwjglNatives"
+	compile "org.lwjgl:lwjgl-nfd:$lwjglVersion:$lwjglNatives"
+	compile "org.lwjgl:lwjgl-nuklear:$lwjglVersion:$lwjglNatives"
+	compile "org.lwjgl:lwjgl-openal:$lwjglVersion:$lwjglNatives"
+	compile "org.lwjgl:lwjgl-opengl:$lwjglVersion:$lwjglNatives"
+	compile "org.lwjgl:lwjgl-opengles:$lwjglVersion:$lwjglNatives"
+	compile "org.lwjgl:lwjgl-openvr:$lwjglVersion:$lwjglNatives"
+	compile "org.lwjgl:lwjgl-ovr:$lwjglVersion:$lwjglNatives"
+	compile "org.lwjgl:lwjgl-par:$lwjglVersion:$lwjglNatives"
+	compile "org.lwjgl:lwjgl-remotery:$lwjglVersion:$lwjglNatives"
+	compile "org.lwjgl:lwjgl-rpmalloc:$lwjglVersion:$lwjglNatives"
+	compile "org.lwjgl:lwjgl-sse:$lwjglVersion:$lwjglNatives"
+	compile "org.lwjgl:lwjgl-stb:$lwjglVersion:$lwjglNatives"
+	compile "org.lwjgl:lwjgl-tinyexr:$lwjglVersion:$lwjglNatives"
+	compile "org.lwjgl:lwjgl-tinyfd:$lwjglVersion:$lwjglNatives"
+	compile "org.lwjgl:lwjgl-tootle:$lwjglVersion:$lwjglNatives"
+	compile "org.lwjgl:lwjgl-xxhash:$lwjglVersion:$lwjglNatives"
+	compile "org.lwjgl:lwjgl-yoga:$lwjglVersion:$lwjglNatives"
+	compile "org.lwjgl:lwjgl-zstd:$lwjglVersion:$lwjglNatives"
 
     // Declare the dependency for your favourite test framework you want to use in your tests.
     // TestNG is also supported by the Gradle Test task. Just change the
@@ -30,9 +125,8 @@ dependencies {
     // 'test.useTestNG()' to your build script.
     testCompile 'junit:junit:4.12'
 }
-// jar stuff
-jar {
-    baseName = 'gs-gradle'
-    version =  '0.1.0'
-}
-*/
+// end::dependencies[]
+
+
+// tag::wrapper[]
+// end::wrapper[]
